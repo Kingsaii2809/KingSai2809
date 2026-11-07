@@ -103,3 +103,38 @@
     navigator.serviceWorker.register('sw.js');
   }
 </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Music App</title>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+    <h1>Local Music Player</h1>
+    
+    <!-- The actual audio engine (hidden, controlled by JS) -->
+    <audio id="audio-player"></audio>
+
+    <div class="controls">
+        <button onclick="playSong('songs/Andamaina Lokam.mp3')">Play Andamaina Lokam</button>
+        <!-- Add more buttons for other songs using their relative folder paths -->
+    </div>
+
+    <script>
+        // Register your service worker for offline app use
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        // JavaScript function to handle playing the inbuilt files
+        function playSong(filePath) {
+            const player = document.getElementById('audio-player');
+            player.src = filePath; // Sets the source to your local file path
+            player.play();
+        }
+    </script>
+</body>
+</html>
