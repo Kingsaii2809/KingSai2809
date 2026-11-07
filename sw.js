@@ -16,3 +16,21 @@ self.addEventListener('fetch', (e) => {
     caches.match(e.request).then((response) => response || fetch(e.request))
   );
 });
+const CACHE_NAME = 'music-cache-v1';
+const ASSETS = [
+  'index.html',
+  'manifest.json',
+  'songs/Andamaina Lokam.mp3' // Adding your local track to the app bundle cache
+];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((response) => response || fetch(e.request))
+  );
+});
