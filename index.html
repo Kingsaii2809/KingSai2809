@@ -138,3 +138,118 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Music App</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .upload-btn {
+            background-color: #1DB954;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        #file-input {
+            display: none;
+        }
+        .playlist {
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        .song-item {
+            background: #1e1e1e;
+            padding: 15px;
+            margin: 10px auto;
+            max-width: 400px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .song-item:hover {
+            background: #282828;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Local Music Player</h1>
+    
+    <!-- Hidden native file input, triggered by the button below -->
+    <input type="file" id="file-input" accept="audio/*" multiple>
+    <button class="upload-btn" onclick="document.getElementById('file-input').click()">Choose Songs from Device</button>
+
+    <h3>Your Playlist</h3>
+    <ul id="playlist" class="playlist">
+        <!-- Static built-in song -->
+        <li class="song-item" onclick="playSong('songs/Andamaina Lokam.mp3', 'Andamaina Lokam')">
+            🎵 Andamaina Lokam (Built-in)
+        </li>
+    </ul>
+
+    <h2 id="current-track">Now Playing: None</h2>
+    <audio id="audio-player" controls style="width: 100%; max-width: 400px; margin-top: 20px;"></audio>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        const audioPlayer = document.getElementById('audio-player');
+        const fileInput = document.getElementById('file-input');
+        const playlistContainer = document.getElementById('playlist');
+        const trackTitle = document.getElementById('current-track');
+
+        // Function to play selected track
+        function playSong(sourceUrl, title) {
+            audioPlayer.src = sourceUrl;
+            trackTitle.innerText = "Now Playing: " + title;
+            audioPlayer.play();
+        }
+
+        // Event listener to handle uploaded files
+        fileInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Create a temporary local URL for the file on the device
+                const fileUrl = URL.createObjectURL(file);
+                
+                // Clean up the file name display (remove .mp3 extension)
+                const songName = file.name.replace(/\.[^/.]+$/, "");
+
+                // Create a new list item for the playlist
+                const listItem = document.createElement('li');
+                listItem.className = 'song-item';
+                listItem.innerText = "🎵 " + songName;
+                
+                // Set click action to play this file
+                listItem.onclick = function() {
+                    playSong(fileUrl, songName);
+                };
+
+                // Add to playlist UI
+                playlistContainer.appendChild(listItem);
+            }
+        });
+    </script>
+</body>
+</html>
