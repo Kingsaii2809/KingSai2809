@@ -1,0 +1,6 @@
+{
+  "_note": "Songs you own the rights to. Put audio files in /songs and list them here. 'src' is a path or URL.",
+  "tracks": [
+    { "id": "example-1", "title": "Example Track", "artist": "Your Name", "src": "songs/example.mp3", "cover": "" }
+  ]
+}

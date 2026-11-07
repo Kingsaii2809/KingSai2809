@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17141F">
+  <title>Roomtone</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <img class="logo" src="logo.svg" alt="" width="40" height="40">
+    <h1>Roomtone</h1>
+    <button class="chip" id="soundBtn" aria-haspopup="dialog">
+      <span id="modeLabel">Studio</span>
+    </button>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" aria-selected="true" data-view="library">Library</button>
+    <button role="tab" aria-selected="false" data-view="device">This device</button>
+    <button role="tab" aria-selected="false" data-view="playlists">Playlists</button>
+  </nav>
+
+  <main>
+    <section id="view-library" class="view" role="tabpanel">
+      <ul class="tracks" id="libraryList"></ul>
+    </section>
+
+    <section id="view-device" class="view" role="tabpanel" hidden>
+      <label class="drop" for="filePick">
+        <strong>Add songs from this device</strong>
+        <span>MP3, WAV, FLAC, M4A, OGG. They stay on your phone.</span>
+        <input id="filePick" type="file" accept="audio/*" multiple hidden>
+      </label>
+      <ul class="tracks" id="deviceList"></ul>
+    </section>
+
+    <section id="view-playlists" class="view" role="tabpanel" hidden>
+      <form class="newlist" id="newListForm">
+        <input id="newListName" type="text" placeholder="New playlist name" maxlength="40" aria-label="Playlist name" required>
+        <button class="btn" type="submit">Create</button>
+      </form>
+      <div id="playlistArea"></div>
+    </section>
+  </main>
+
+  <div class="player" id="player">
+    <div class="meta">
+      <div class="np-title" id="npTitle">Nothing playing</div>
+      <div class="np-artist" id="npArtist">Pick a song to start</div>
+    </div>
+    <input type="range" id="seek" min="0" max="1000" value="0" aria-label="Seek">
+    <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
+    <div class="controls">
+      <button class="icon" id="prevBtn" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><path d="M7 6v12M18 7.5v9a1 1 0 0 1-1.6.8l-6-4.5a1 1 0 0 1 0-1.6l6-4.5a1 1 0 0 1 1.6.8z"/></svg>
+      </button>
+      <button class="icon play" id="playBtn" aria-label="Play">
+        <svg viewBox="0 0 24 24" id="playIcon"><path d="M9 6.8v10.4a1 1 0 0 0 1.5.9l8.2-5.2a1 1 0 0 0 0-1.8L10.500 5.900A1 1 0 0 0 9 6.800z"/></svg>
+      </button>
+      <button class="icon" id="nextBtn" aria-label="Next">
+        <svg viewBox="0 0 24 24"><path d="M17 6v12M6 7.5v9a1 1 0 0 0 1.6.8l6-4.5a1 1 0 0 0 0-1.6l-6-4.5A1 1 0 0 0 6 7.500z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Sound sheet -->
+  <div class="sheet" id="soundSheet" role="dialog" aria-label="Sound" hidden>
+    <div class="sheet-body">
+      <div class="sheet-head"><h2>Sound</h2><button class="chip" data-close>Done</button></div>
+      <div class="modes" id="modes">
+        <button data-mode="studio" aria-pressed="true"><b>Studio</b><small>Clean, untouched stereo</small></button>
+        <button data-mode="spatial" aria-pressed="false"><b>Spatial 3D</b><small>Surround-style, best on headphones</small></button>
+        <button data-mode="wide" aria-pressed="false"><b>Wide</b><small>Roomier stereo for speakers</small></button>
+      </div>
+      <label class="slider">Room size <input type="range" id="roomAmt" min="0" max="100" value="25"></label>
+      <label class="slider">Bass <input type="range" id="bassAmt" min="-6" max="9" value="0"></label>
+      <label class="slider">Treble <input type="range" id="trebleAmt" min="-6" max="9" value="0"></label>
+      <p class="fine">Spatial 3D uses binaural (HRTF) processing in your browser. It gives a surround-like effect, but it is not licensed Dolby Atmos.</p>
+    </div>
+  </div>
+
+  <!-- Add to playlist sheet -->
+  <div class="sheet" id="pickSheet" role="dialog" aria-label="Add to playlist" hidden>
+    <div class="sheet-body">
+      <div class="sheet-head"><h2>Add to playlist</h2><button class="chip" data-close>Close</button></div>
+      <div id="pickList"></div>
+    </div>
+  </div>
+
+  <audio id="audio" preload="metadata" crossorigin="anonymous"></audio>
+  <script src="script.js"></script>
+</body>
+</html>
